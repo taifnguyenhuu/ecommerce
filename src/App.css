@@ -1,0 +1,23 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+}
+
+.appHeader {
+  height: 60px;
+  outline: 1px solid red;
+}
+
+.appContent {
+  outline: 1px solid yellow;
+  display: flex;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.appFooter {
+  height: 60px;
+  background-color: aquamarine;
+}
