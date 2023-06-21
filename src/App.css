@@ -1,12 +1,19 @@
-.app {
+.App {
   display: flex;
   flex-direction: column;
   height: 100vh;
   width: 100vw;
 }
-
+.soppingCartIcon {
+  font-size: 30px;
+  margin-right: 32px;
+  cursor: pointer;
+}
 .appHeader {
   height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   outline: 1px solid red;
 }
 
@@ -20,4 +27,13 @@
 .appFooter {
   height: 60px;
   background-color: aquamarine;
+}
+
+.itemCard,
+.itemCardBadge {
+  margin: 8px;
+}
+.itemCardImage {
+  height: 150px !important;
+  object-fit: scale-down;
 }

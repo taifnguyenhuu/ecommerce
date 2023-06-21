@@ -27,51 +27,16 @@ const items = [
     key: "men",
     children: [
       {
-        type: "mens-shirt",
-        label: "Shirt",
-        children: [
-          {
-            label: "Shirt",
-            key: "shirt",
-          },
-          {
-            label: "T-Shirt",
-            key: "t-shirt",
-          },
-        ],
+        label: "Shirts",
+        key: "mens-shirts",
       },
       {
-        type: "mens-shoe",
-        label: "Shoe",
-        children: [
-          {
-            label: "Western shoes",
-            key: "western-shoes",
-          },
-          {
-            label: "Chelsea Boots",
-            key: "chelsea-boots",
-          },
-        ],
+        label: "Shoes",
+        key: "mens-shoes",
       },
       {
-        type: "mens-watch",
-        label: "Watch",
-        children: [
-          {
-            label: "Rolex",
-            key: "rolex",
-          },
-          {
-            label: "Citizen",
-            key: "citizen",
-          },
-
-          {
-            label: "Casio",
-            key: "casio",
-          },
-        ],
+        label: "Watchs",
+        key: "mens-watches",
       },
     ],
   },
@@ -80,51 +45,24 @@ const items = [
     key: "women",
     children: [
       {
-        type: "womens-shirt",
-        label: "Shirt",
-        children: [
-          {
-            label: "Shirt",
-            key: "shirt",
-          },
-          {
-            label: "T-Shirt",
-            key: "t-shirt",
-          },
-        ],
+        label: "Dresses",
+        key: "womens-dresses",
       },
       {
-        type: "womens-shoe",
-        label: "Shoe",
-        children: [
-          {
-            label: "Western shoes",
-            key: "western-shoes",
-          },
-          {
-            label: "Chelsea Boots",
-            key: "chelsea-boots",
-          },
-        ],
+        key: "womens-shoes",
+        label: "Shoes",
       },
       {
-        type: "womens-watch",
-        label: "Watch",
-        children: [
-          {
-            label: "Rolex",
-            key: "rolex",
-          },
-          {
-            label: "Citizen",
-            key: "citizen",
-          },
-
-          {
-            label: "Casio",
-            key: "casio",
-          },
-        ],
+        key: "womens-watches",
+        label: "Watchs",
+      },
+      {
+        key: "womens-bags",
+        label: "Bags",
+      },
+      {
+        key: "womens-jewellery",
+        label: "Jewellerys",
       },
     ],
   },
@@ -142,14 +80,40 @@ function Header() {
 
   const onMenuClick = (item) => {
     navigate(`/${item.key}`);
-    console.log(navigate);
   };
   return (
-    <div className="appHeader">
-      {" "}
-      <Menu onClick={onMenuClick} mode="horizontal" items={items} />
+    <>
+      <div className="appHeader">
+        {" "}
+        <Menu onClick={onMenuClick} mode="horizontal" items={items} />
+        <Typography.Title>TaiNH</Typography.Title>
+        <AppCart />
+      </div>
+    </>
+  );
+}
+function AppCart() {
+  const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
+
+  return (
+    <div>
+      <Badge
+        onClick={() => {
+          setCartDrawerOpen(true);
+        }}
+        count={5}
+        className="soppingCartIcon"
+      >
+        <ShoppingCartOutlined />
+      </Badge>
+      <Drawer
+        open={cartDrawerOpen}
+        onClose={() => {
+          setCartDrawerOpen(false);
+        }}
+        title="Your Cart"
+      ></Drawer>
     </div>
   );
 }
-
 export default Header;

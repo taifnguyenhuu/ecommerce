@@ -6,7 +6,7 @@ import Home from "../pages/home/Home";
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<Home />}>
+      <Route path="/" element={<Category />}>
         Home
       </Route>
       <Route path="/:categoryId" element={<Category />}>
