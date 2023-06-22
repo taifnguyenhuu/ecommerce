@@ -11,6 +11,7 @@ import {
   Button,
   message,
   Spin,
+  Select,
 } from "antd";
 import {
   getAllProducts,
@@ -22,6 +23,8 @@ function Products() {
   const [loading, setLoading] = useState(false);
   const [items, setItems] = useState([]);
   const param = useParams();
+  const [sortOrder, setSortOrder] = useState("az");
+
   console.log(param.categoryId);
   useEffect(() => {
     setLoading(true);
@@ -37,8 +40,33 @@ function Products() {
   if (loading) {
     return <Spin spinning />;
   }
+
   return (
-    <div>
+    <div className="productsContainer">
+      <div className="productSort">
+        <Typography.Text>View Items Sorted By: </Typography.Text>
+        <Select
+          defaultValue={"az"}
+          options={[
+            {
+              label: "a-z",
+              value: "az",
+            },
+            {
+              label: "z-a",
+              value: "za",
+            },
+            {
+              label: "Low to High",
+              value: "lowHigh",
+            },
+            {
+              label: "High to Low",
+              value: "highLow",
+            },
+          ]}
+        ></Select>
+      </div>
       <List
         grid={{ column: 3 }}
         renderItem={(product, index) => {
