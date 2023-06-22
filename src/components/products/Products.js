@@ -41,11 +41,40 @@ function Products() {
     return <Spin spinning />;
   }
 
+  const getSortedItems = () => {
+    const sortedItems = [...items];
+    sortedItems.sort((a, b) => {
+      const aLowerCaseTitle = a.title.toLowerCase();
+      const bLowerCaseTitle = b.title.toLowerCase();
+
+      if (sortOrder === "az") {
+        return aLowerCaseTitle > bLowerCaseTitle
+          ? 1
+          : aLowerCaseTitle === bLowerCaseTitle
+          ? 0
+          : -1;
+      } else if (sortOrder === "za") {
+        return aLowerCaseTitle < bLowerCaseTitle
+          ? 1
+          : aLowerCaseTitle === bLowerCaseTitle
+          ? 0
+          : -1;
+      } else if (sortOrder === "lowHigh") {
+        return a.price > b.price ? 1 : a.price === b.price ? 0 : -1;
+      } else if (sortOrder === "highLow") {
+        return a.price < b.price ? 1 : a.price === b.price ? 0 : -1;
+      }
+    });
+    return sortedItems;
+  };
   return (
     <div className="productsContainer">
       <div className="productSort">
         <Typography.Text>View Items Sorted By: </Typography.Text>
         <Select
+          onChange={(value) => {
+            setSortOrder(value);
+          }}
           defaultValue={"az"}
           options={[
             {
@@ -113,7 +142,7 @@ function Products() {
             </Badge.Ribbon>
           );
         }}
-        dataSource={items}
+        dataSource={getSortedItems()}
       ></List>
     </div>
   );

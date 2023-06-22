@@ -160,11 +160,11 @@ function AppCart() {
 
   const onFinish = (values) => {
     alert("Successfull!");
-    console.log("Success:", values);
+    //console.log("Success:", values);
   };
   const onFinishFailed = (errorInfo) => {
     alert("Please enter information before submitting...");
-    console.log("Failed:", errorInfo);
+    //console.log("Failed:", errorInfo);
   };
   return (
     <div>
@@ -172,7 +172,7 @@ function AppCart() {
         onClick={() => {
           setCartDrawerOpen(true);
         }}
-        count={5}
+        count={cartItems.length}
         className="soppingCartIcon"
       >
         <ShoppingCartOutlined />
