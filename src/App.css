@@ -50,3 +50,35 @@
   height: 150px !important;
   object-fit: scale-down;
 }
+
+.login-form-forgot {
+  float: right;
+}
+
+.login-container {
+  margin: auto;
+}
+.login-content {
+  width: 600px !important;
+}
+.login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.block-login {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn-login {
+  margin-right: 16px;
+}
+
+.block-forgot {
+}
+
+.logo-login {
+  justify-content: center !important;
+}

@@ -14,6 +14,7 @@ import {
   Typography,
   CaretDownOutlined,
   Pagination,
+  Modal,
 } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -89,7 +90,10 @@ function Header() {
         {" "}
         <Menu onClick={onMenuClick} mode="horizontal" items={items} />
         <Typography.Title>E-Commerce</Typography.Title>
-        <AppCart />
+        <div className="block-login">
+          <AppCart />
+          <ModalLoign />
+        </div>
       </div>
     </>
   );
@@ -301,6 +305,92 @@ function AppCart() {
         </Drawer>
       </Drawer>
     </div>
+  );
+}
+
+function ModalLoign() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const onFinishLogin = (values) => {
+    console.log("Success:", values);
+    setIsModalOpen(false);
+  };
+  const onFinishFailedLogin = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+  };
+  const [form] = Form.useForm();
+  const accountValue = Form.useWatch("email", form);
+  const passwordValue = Form.useWatch("password", form);
+  return (
+    <>
+      <Button type="default" onClick={showModal} className="btn-login">
+        LOGIN
+      </Button>
+      <Modal
+        className="logo-login"
+        title="Account Login?"
+        open={isModalOpen}
+        onOk={() => {
+          setIsModalOpen(false);
+        }}
+        onCancel={() => {
+          setIsModalOpen(false);
+        }}
+      >
+        <Form
+          form={form}
+          onFinish={onFinishLogin}
+          onFinishFailed={onFinishFailedLogin}
+        >
+          <Form.Item
+            rules={[
+              {
+                required: true,
+                type: "email",
+                message: "Please enter a valid email/phone...",
+              },
+            ]}
+            label="Email/Phone"
+            name="email"
+          >
+            <Input
+              placeholder="Enter your email/number phone..."
+              onChange={(value) => {
+                console.log(value);
+              }}
+            />
+          </Form.Item>
+          <Form.Item
+            rules={[
+              {
+                required: true,
+                type: "password",
+                message: "Please enter a password...",
+              },
+            ]}
+            label="Password"
+            name="password"
+          >
+            <Input placeholder="Enter your password..." />
+          </Form.Item>
+          <Form.Item>
+            <Form.Item name="remember" valuePropName="checked" noStyle>
+              <Checkbox>Remember me</Checkbox>
+            </Form.Item>
+            <a className="login-form-forgot" href="">
+              Forgot password?
+            </a>
+          </Form.Item>
+        </Form>
+        <Typography>
+          <pre>Account Value: {accountValue}</pre>
+          <pre>Password Value: {passwordValue}</pre>
+        </Typography>
+      </Modal>
+    </>
   );
 }
 export default Header;
