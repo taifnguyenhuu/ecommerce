@@ -76,9 +76,14 @@
   margin-right: 16px;
 }
 
-.block-forgot {
-}
-
 .logo-login {
   justify-content: center !important;
+}
+
+.login-icon {
+  display: flex;
+  justify-content: center;
+}
+.gg-icon {
+  margin-right: 16px;
 }

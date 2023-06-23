@@ -1,5 +1,11 @@
 import React from "react";
-import { HomeFilled, ShoppingCartOutlined } from "@ant-design/icons";
+import {
+  HomeFilled,
+  ShoppingCartOutlined,
+  InstagramOutlined,
+  GoogleOutlined,
+  FacebookOutlined,
+} from "@ant-design/icons";
 import {
   Badge,
   Button,
@@ -322,8 +328,11 @@ function ModalLoign() {
     console.log("Failed:", errorInfo);
   };
   const [form] = Form.useForm();
-  const accountValue = Form.useWatch("email", form);
+  const emailValue = Form.useWatch("email", form);
   const passwordValue = Form.useWatch("password", form);
+  const onReset = () => {
+    form.resetFields();
+  };
   return (
     <>
       <Button type="default" onClick={showModal} className="btn-login">
@@ -334,7 +343,17 @@ function ModalLoign() {
         title="Account Login?"
         open={isModalOpen}
         onOk={() => {
+          const account = [
+            {
+              email: `${emailValue}`,
+              password: `${passwordValue}`,
+            },
+          ];
+          const setAccountJson = JSON.stringify(account);
+          localStorage.setItem("accountTaiNH", setAccountJson);
           setIsModalOpen(false);
+          onReset();
+          alert("Saved the account to localStorage!");
         }}
         onCancel={() => {
           setIsModalOpen(false);
@@ -374,7 +393,7 @@ function ModalLoign() {
             label="Password"
             name="password"
           >
-            <Input placeholder="Enter your password..." />
+            <Input type="password" placeholder="Enter your password..." />
           </Form.Item>
           <Form.Item>
             <Form.Item name="remember" valuePropName="checked" noStyle>
@@ -384,11 +403,15 @@ function ModalLoign() {
               Forgot password?
             </a>
           </Form.Item>
+          <Form.Item className="login-icon">
+            <a className="gg-icon" href="">
+              <GoogleOutlined style={{ fontSize: "32px" }} />
+            </a>
+            <a className="fb-icon" href="">
+              <FacebookOutlined style={{ fontSize: "32px" }} />
+            </a>
+          </Form.Item>
         </Form>
-        <Typography>
-          <pre>Account Value: {accountValue}</pre>
-          <pre>Password Value: {passwordValue}</pre>
-        </Typography>
       </Modal>
     </>
   );
