@@ -9,6 +9,11 @@
   margin-right: 32px;
   cursor: pointer;
 }
+.deleteIcon {
+  font-size: 16px;
+  cursor: pointer;
+  float: right;
+}
 
 .btn-chekcout {
   margin-top: 20px;

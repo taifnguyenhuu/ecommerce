@@ -9,8 +9,7 @@ import {
   FacebookOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
-import { Button, Checkbox, Form, Input, Typography } from "antd";
-import { useNavigate } from "react-router-dom";
+import { Button, Checkbox, Form, Input, Typography, DatePicker } from "antd";
 const onFinish = (values) => {
   console.log("Success:", values);
 };
@@ -18,49 +17,50 @@ const onFinishFailed = (errorInfo) => {
   console.log("Failed:", errorInfo);
 };
 
-function LoginEc() {
-  const login = useNavigate();
-  const getAcountUser = JSON.parse(localStorage.getItem("accountTaiNH"));
-  const accountUser = getAcountUser[0].email;
-  const password = getAcountUser[0].password;
+function SignupEc() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
   };
 
-  const onFinishLogin = (values) => {
+  const onFinishSignUp = (values) => {
     console.log("Success:", values);
     setIsModalOpen(false);
   };
-  const onFinishFailedLogin = (errorInfo) => {
+  const onFinishFailedSignUp = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
   const [form] = Form.useForm();
   const emailValue = Form.useWatch("email", form);
   const passwordValue = Form.useWatch("password", form);
+  const fullnameValue = Form.useWatch("fullname", form);
+  const dateUserValue = Form.useWatch("dateUser", form);
   const onReset = () => {
     form.resetFields();
   };
   return (
     <>
-      <Button type="default" onClick={showModal} className="btn-login">
-        LOGIN
+      <Button type="primary" onClick={showModal} className="btn-login">
+        SIGN UP
       </Button>
       <Modal
         className="logo-login"
-        title="Account Login?"
+        title="Account Sign-Up"
         open={isModalOpen}
         onOk={() => {
-          if (accountUser === emailValue && password === passwordValue) {
-            alert("success");
-            setIsModalOpen(false);
-          } else if (accountUser !== emailValue || password !== passwordValue) {
-            alert("sai ten tai khoan hoac mat khau");
-            setIsModalOpen(true);
-          } else {
-            alert("error");
-          }
+          const account = [
+            {
+              email: `${emailValue}`,
+              password: `${passwordValue}`,
+              fullname: `${fullnameValue}`,
+              date: `${dateUserValue}`,
+            },
+          ];
+          const setAccountJson = JSON.stringify(account);
+          localStorage.setItem("accountTaiNH", setAccountJson);
+          setIsModalOpen(false);
           onReset();
+          alert("Saved the account to localStorage!");
         }}
         onCancel={() => {
           setIsModalOpen(false);
@@ -68,8 +68,8 @@ function LoginEc() {
       >
         <Form
           form={form}
-          onFinish={onFinishLogin}
-          onFinishFailed={onFinishFailedLogin}
+          onFinish={onFinishSignUp}
+          onFinishFailed={onFinishFailedSignUp}
         >
           <Form.Item
             rules={[
@@ -93,6 +93,19 @@ function LoginEc() {
             rules={[
               {
                 required: true,
+                type: "text",
+                message: "Please enter a full name...",
+              },
+            ]}
+            label="Full Name"
+            name="fullname"
+          >
+            <Input type="text" placeholder="Enter your full name..." />
+          </Form.Item>
+          <Form.Item
+            rules={[
+              {
+                required: true,
                 type: "password",
                 message: "Please enter a password...",
               },
@@ -102,13 +115,32 @@ function LoginEc() {
           >
             <Input type="password" placeholder="Enter your password..." />
           </Form.Item>
+          <Form.Item
+            rules={[
+              {
+                required: true,
+                type: "password",
+                message: "Please re-enter your password...",
+              },
+            ]}
+            label="Confirm Password"
+            name="confirmPassword"
+          >
+            <Input
+              type="password"
+              placeholder="Please re-enter your password..."
+            />
+          </Form.Item>
+          <Form.Item name="dateUser" label="Date of birth">
+            <DatePicker />
+          </Form.Item>
           <Form.Item>
             <Form.Item name="remember" valuePropName="checked" noStyle>
-              <Checkbox>Remember me</Checkbox>
+              Already have an account?
+              <a style={{ marginLeft: "5px" }} href="">
+                Login
+              </a>
             </Form.Item>
-            <a className="login-form-forgot" href="">
-              Forgot password?
-            </a>
           </Form.Item>
           <Form.Item className="login-icon">
             <a className="gg-icon" href="">
@@ -124,4 +156,4 @@ function LoginEc() {
   );
 }
 
-export default LoginEc;
+export default SignupEc;

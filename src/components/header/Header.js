@@ -5,6 +5,7 @@ import {
   InstagramOutlined,
   GoogleOutlined,
   FacebookOutlined,
+  DeleteOutlined,
 } from "@ant-design/icons";
 import {
   Badge,
@@ -25,6 +26,8 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getCart } from "../../api/Api";
+import LoginEc from "../login/LoginEc";
+import SignupEc from "../login/SignupEc";
 const items = [
   {
     label: "Home",
@@ -98,7 +101,8 @@ function Header() {
         <Typography.Title>E-Commerce</Typography.Title>
         <div className="block-login">
           <AppCart />
-          <ModalLoign />
+          <LoginEc />
+          <SignupEc />
         </div>
       </div>
     </>
@@ -108,12 +112,17 @@ function AppCart() {
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [checkoutDrawerOpen, setCheckoutDrawerOpen] = useState(false);
-  useEffect(() => {
-    getCart().then((res) => {
-      setCartItems(res.products);
-    });
-  }, []);
+  const getItemCart = JSON.parse(localStorage.getItem("items"));
 
+  useEffect(() => {
+    setCartItems(getItemCart);
+  }, [getItemCart.length]);
+  // useEffect(() => {
+  //   getCart().then((res) => {
+  //     setCartItems(res.products);
+  //     console.log(res.products);
+  //   });
+  // }, []);
   const columns = [
     {
       title: "Title",
@@ -130,15 +139,18 @@ function AppCart() {
       title: "Quantity",
       dataIndex: "quantity",
       render: (value, record) => {
+        const deleteItem = () => {
+          console.log("daxoa");
+        };
         return (
           <InputNumber
             min={0}
-            defaultValue={value}
+            defaultValue={1}
             onChange={(value) => {
               setCartItems((pre) =>
                 pre.map((cart) => {
                   if (record.id === cart.id) {
-                    cart.total = cart.price * value;
+                    cart.stock = cart.price * value;
                   }
                   return cart;
                 })
@@ -150,7 +162,7 @@ function AppCart() {
     },
     {
       title: "Total",
-      dataIndex: "total",
+      dataIndex: "stock",
       render: (value) => {
         return <span>${value}</span>;
       },
@@ -159,12 +171,19 @@ function AppCart() {
       title: "DiscountPercentage",
       dataIndex: "discountPercentage",
       render: (value) => {
-        return <span>{value}%</span>;
+        console.log(value);
+        return (
+          <span>
+            {value}% <DeleteOutlined className="deleteIcon" />
+          </span>
+        );
       },
     },
   ];
   const summaryTotal = (data) => {
-    const total = data.reduce((pre, cur) => pre + cur.total, 0);
+    console.log(data);
+    const total = data.reduce((pre, cur) => pre + cur.stock, 0);
+    console.log(total);
     return <span>${total}</span>;
   };
 
@@ -314,106 +333,4 @@ function AppCart() {
   );
 }
 
-function ModalLoign() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const onFinishLogin = (values) => {
-    console.log("Success:", values);
-    setIsModalOpen(false);
-  };
-  const onFinishFailedLogin = (errorInfo) => {
-    console.log("Failed:", errorInfo);
-  };
-  const [form] = Form.useForm();
-  const emailValue = Form.useWatch("email", form);
-  const passwordValue = Form.useWatch("password", form);
-  const onReset = () => {
-    form.resetFields();
-  };
-  return (
-    <>
-      <Button type="default" onClick={showModal} className="btn-login">
-        LOGIN
-      </Button>
-      <Modal
-        className="logo-login"
-        title="Account Login?"
-        open={isModalOpen}
-        onOk={() => {
-          const account = [
-            {
-              email: `${emailValue}`,
-              password: `${passwordValue}`,
-            },
-          ];
-          const setAccountJson = JSON.stringify(account);
-          localStorage.setItem("accountTaiNH", setAccountJson);
-          setIsModalOpen(false);
-          onReset();
-          alert("Saved the account to localStorage!");
-        }}
-        onCancel={() => {
-          setIsModalOpen(false);
-        }}
-      >
-        <Form
-          form={form}
-          onFinish={onFinishLogin}
-          onFinishFailed={onFinishFailedLogin}
-        >
-          <Form.Item
-            rules={[
-              {
-                required: true,
-                type: "email",
-                message: "Please enter a valid email/phone...",
-              },
-            ]}
-            label="Email/Phone"
-            name="email"
-          >
-            <Input
-              placeholder="Enter your email/number phone..."
-              onChange={(value) => {
-                console.log(value);
-              }}
-            />
-          </Form.Item>
-          <Form.Item
-            rules={[
-              {
-                required: true,
-                type: "password",
-                message: "Please enter a password...",
-              },
-            ]}
-            label="Password"
-            name="password"
-          >
-            <Input type="password" placeholder="Enter your password..." />
-          </Form.Item>
-          <Form.Item>
-            <Form.Item name="remember" valuePropName="checked" noStyle>
-              <Checkbox>Remember me</Checkbox>
-            </Form.Item>
-            <a className="login-form-forgot" href="">
-              Forgot password?
-            </a>
-          </Form.Item>
-          <Form.Item className="login-icon">
-            <a className="gg-icon" href="">
-              <GoogleOutlined style={{ fontSize: "32px" }} />
-            </a>
-            <a className="fb-icon" href="">
-              <FacebookOutlined style={{ fontSize: "32px" }} />
-            </a>
-          </Form.Item>
-        </Form>
-      </Modal>
-    </>
-  );
-}
 export default Header;

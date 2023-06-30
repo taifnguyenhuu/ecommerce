@@ -25,7 +25,6 @@ function Products() {
   const param = useParams();
   const [sortOrder, setSortOrder] = useState("az");
 
-  console.log(param.categoryId);
   useEffect(() => {
     setLoading(true);
     (param.categoryId
@@ -34,7 +33,7 @@ function Products() {
     )
       .then((res) => res.json())
       .then((items) => setItems(items.products));
-    console.log(loading);
+
     setLoading(false);
   }, [param]);
   if (loading) {
@@ -150,7 +149,14 @@ function Products() {
 
 function AddToCart({ item }) {
   const [loading, setLoading] = useState(false);
+
   const addBudgeToCart = () => {
+    if (localStorage.getItem("items") == null) {
+      localStorage.setItem("items", "[]");
+    }
+    const itemOld = JSON.parse(localStorage.getItem("items"));
+    itemOld.push(item);
+    localStorage.setItem("items", JSON.stringify(itemOld));
     setLoading(true);
     addToCart(item.id).then((res) => {
       message.success(`${item.title} has been added to cart!`);
