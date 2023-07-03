@@ -1,5 +1,5 @@
-import React from "react";
-import { useState } from "react";
+import React, { createContext } from "react";
+import { useState, useContext } from "react";
 import { Modal } from "antd";
 import {
   HomeFilled,
@@ -18,8 +18,7 @@ const onFinishFailed = (errorInfo) => {
   console.log("Failed:", errorInfo);
 };
 
-function LoginEc() {
-  const login = useNavigate();
+function LoginEc(props) {
   const getAcountUser = JSON.parse(localStorage.getItem("accountTaiNH"));
   const accountUser = getAcountUser[0].email;
   const password = getAcountUser[0].password;
@@ -41,6 +40,9 @@ function LoginEc() {
   const onReset = () => {
     form.resetFields();
   };
+  const sendData = (send) => {
+    props.parentCallback(send);
+  };
   return (
     <>
       <Button type="default" onClick={showModal} className="btn-login">
@@ -52,13 +54,16 @@ function LoginEc() {
         open={isModalOpen}
         onOk={() => {
           if (accountUser === emailValue && password === passwordValue) {
-            alert("success");
             setIsModalOpen(false);
+            sendData(true);
           } else if (accountUser !== emailValue || password !== passwordValue) {
-            alert("sai ten tai khoan hoac mat khau");
+            alert("Wrong username or password!");
             setIsModalOpen(true);
-          } else {
-            alert("error");
+            sendData(false);
+            if (accountUser === "" || password === "") {
+              alert("Please enter your account and password!");
+              sendData(false);
+            }
           }
           onReset();
         }}

@@ -1,4 +1,6 @@
 import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { addcart } from "../../actions/counter";
 import {
   HomeFilled,
   ShoppingCartOutlined,
@@ -28,6 +30,7 @@ import { useNavigate } from "react-router-dom";
 import { getCart } from "../../api/Api";
 import LoginEc from "../login/LoginEc";
 import SignupEc from "../login/SignupEc";
+import LogoutEc from "../login/LogoutEc";
 const items = [
   {
     label: "Home",
@@ -88,10 +91,17 @@ const items = [
   },
 ];
 function Header() {
+  const counter = useSelector((state) => state.counter);
+
   const navigate = useNavigate();
 
   const onMenuClick = (item) => {
     navigate(`/${item.key}`);
+  };
+
+  const [login, setLogin] = useState();
+  const callbackFunction = (childData) => {
+    setLogin(childData);
   };
   return (
     <>
@@ -101,28 +111,29 @@ function Header() {
         <Typography.Title>E-Commerce</Typography.Title>
         <div className="block-login">
           <AppCart />
-          <LoginEc />
-          <SignupEc />
+          {login ? (
+            <LogoutEc />
+          ) : (
+            <>
+              {" "}
+              <LoginEc parentCallback={callbackFunction} /> <SignupEc />
+            </>
+          )}
         </div>
       </div>
     </>
   );
 }
 function AppCart() {
+  const counter = useSelector((state) => state.counter);
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [checkoutDrawerOpen, setCheckoutDrawerOpen] = useState(false);
-  const getItemCart = JSON.parse(localStorage.getItem("items"));
 
   useEffect(() => {
-    setCartItems(getItemCart);
-  }, [getItemCart.length]);
-  // useEffect(() => {
-  //   getCart().then((res) => {
-  //     setCartItems(res.products);
-  //     console.log(res.products);
-  //   });
-  // }, []);
+    setCartItems(JSON.parse(localStorage.getItem("items")));
+  }, [counter]);
+
   const columns = [
     {
       title: "Title",
@@ -139,9 +150,6 @@ function AppCart() {
       title: "Quantity",
       dataIndex: "quantity",
       render: (value, record) => {
-        const deleteItem = () => {
-          console.log("daxoa");
-        };
         return (
           <InputNumber
             min={0}
@@ -171,7 +179,6 @@ function AppCart() {
       title: "DiscountPercentage",
       dataIndex: "discountPercentage",
       render: (value) => {
-        console.log(value);
         return (
           <span>
             {value}% <DeleteOutlined className="deleteIcon" />
@@ -181,9 +188,8 @@ function AppCart() {
     },
   ];
   const summaryTotal = (data) => {
-    console.log(data);
     const total = data.reduce((pre, cur) => pre + cur.stock, 0);
-    console.log(total);
+
     return <span>${total}</span>;
   };
 
@@ -224,7 +230,6 @@ function AppCart() {
           className="btn-chekcout"
           onClick={() => {
             setCheckoutDrawerOpen(true);
-            console.log(checkoutDrawerOpen);
           }}
           type="primary"
         >

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { addcart, increment } from "../../actions/counter";
 import {
   Card,
   List,
@@ -20,6 +22,8 @@ import {
 } from "../../api/Api";
 import Paragraph from "antd/es/typography/Paragraph";
 function Products() {
+  const updateLocalStorage = useSelector((state) => state.updateLocalStorage);
+
   const [loading, setLoading] = useState(false);
   const [items, setItems] = useState([]);
   const param = useParams();
@@ -33,7 +37,6 @@ function Products() {
     )
       .then((res) => res.json())
       .then((items) => setItems(items.products));
-
     setLoading(false);
   }, [param]);
   if (loading) {
@@ -149,19 +152,21 @@ function Products() {
 
 function AddToCart({ item }) {
   const [loading, setLoading] = useState(false);
-
+  const [addCart, setAddCart] = useState(false);
+  const dispatch = useDispatch();
   const addBudgeToCart = () => {
+    dispatch(addcart(addCart));
+    setLoading(true);
+    addToCart(item.id).then((res) => {
+      message.success(`${item.title} has been added to cart!`);
+      setLoading(false);
+    });
     if (localStorage.getItem("items") == null) {
       localStorage.setItem("items", "[]");
     }
     const itemOld = JSON.parse(localStorage.getItem("items"));
     itemOld.push(item);
     localStorage.setItem("items", JSON.stringify(itemOld));
-    setLoading(true);
-    addToCart(item.id).then((res) => {
-      message.success(`${item.title} has been added to cart!`);
-      setLoading(false);
-    });
   };
   return (
     <Button type="link" onClick={addBudgeToCart} loading={loading}>
