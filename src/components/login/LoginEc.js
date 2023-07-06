@@ -19,10 +19,19 @@ const onFinishFailed = (errorInfo) => {
 };
 
 function LoginEc(props) {
-  const getAcountUser = JSON.parse(localStorage.getItem("accountTaiNH"));
+  const accountdefault = [
+    {
+      email: "email",
+      password: "password",
+    },
+  ];
+  const getAcountUser = localStorage.getItem("accountTaiNH")
+    ? JSON.parse(localStorage.getItem("accountTaiNH"))
+    : accountdefault;
   const accountUser = getAcountUser[0].email;
   const password = getAcountUser[0].password;
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const showModal = () => {
     setIsModalOpen(true);
   };

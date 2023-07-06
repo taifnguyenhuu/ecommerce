@@ -161,12 +161,11 @@ function AddToCart({ item }) {
       message.success(`${item.title} has been added to cart!`);
       setLoading(false);
     });
-    if (localStorage.getItem("items") == null) {
-      localStorage.setItem("items", "[]");
-    }
-    const itemOld = JSON.parse(localStorage.getItem("items"));
+    const itemOld = localStorage.getItem("itemslocal")
+      ? JSON.parse(localStorage.getItem("itemslocal"))
+      : [];
     itemOld.push(item);
-    localStorage.setItem("items", JSON.stringify(itemOld));
+    localStorage.setItem("itemslocal", JSON.stringify(itemOld));
   };
   return (
     <Button type="link" onClick={addBudgeToCart} loading={loading}>

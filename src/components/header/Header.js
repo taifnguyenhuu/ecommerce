@@ -112,10 +112,9 @@ function Header() {
         <div className="block-login">
           <AppCart />
           {login ? (
-            <LogoutEc />
+            <LogoutEc parentCallback={callbackFunction} />
           ) : (
             <>
-              {" "}
               <LoginEc parentCallback={callbackFunction} /> <SignupEc />
             </>
           )}
@@ -131,7 +130,11 @@ function AppCart() {
   const [checkoutDrawerOpen, setCheckoutDrawerOpen] = useState(false);
 
   useEffect(() => {
-    setCartItems(JSON.parse(localStorage.getItem("items")));
+    setCartItems(
+      localStorage.getItem("itemslocal")
+        ? JSON.parse(localStorage.getItem("itemslocal"))
+        : []
+    );
   }, [counter]);
 
   const columns = [
@@ -176,13 +179,24 @@ function AppCart() {
       },
     },
     {
-      title: "DiscountPercentage",
+      title: "Discount",
       dataIndex: "discountPercentage",
       render: (value) => {
+        return <span>{value}% </span>;
+      },
+    },
+
+    {
+      title: "Action",
+      dataIndex: "action",
+      render: (text, record, index) => {
         return (
-          <span>
-            {value}% <DeleteOutlined className="deleteIcon" />
-          </span>
+          <DeleteOutlined
+            className="deleteIcon"
+            onClick={() => {
+              handleDelete(index);
+            }}
+          />
         );
       },
     },
@@ -195,11 +209,15 @@ function AppCart() {
 
   const onFinish = (values) => {
     alert("Successfull!");
-    //console.log("Success:", values);
   };
   const onFinishFailed = (errorInfo) => {
     alert("Please enter information before submitting...");
-    //console.log("Failed:", errorInfo);
+  };
+
+  const handleDelete = (index) => {
+    cartItems.splice(index, 1);
+    localStorage.setItem("itemslocal", JSON.stringify(cartItems));
+    setCartItems(JSON.parse(localStorage.getItem("itemslocal")));
   };
   return (
     <div>

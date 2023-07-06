@@ -1,9 +1,15 @@
 import React from "react";
 import { Button } from "antd";
-function LogoutEc() {
+function LogoutEc(props) {
+  const sendData = (send) => {
+    props.parentCallback(send);
+  };
+  const handleLogout = () => {
+    sendData(false);
+  };
   return (
     <div>
-      <Button danger className="btn-login">
+      <Button onClick={handleLogout} danger className="btn-login">
         Log Out
       </Button>
     </div>
