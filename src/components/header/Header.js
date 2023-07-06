@@ -1,12 +1,8 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { addcart } from "../../actions/counter";
+import { useSelector } from "react-redux";
 import {
   HomeFilled,
   ShoppingCartOutlined,
-  InstagramOutlined,
-  GoogleOutlined,
-  FacebookOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
 import {
@@ -18,16 +14,11 @@ import {
   Input,
   InputNumber,
   Menu,
-  message,
   Table,
   Typography,
-  CaretDownOutlined,
-  Pagination,
-  Modal,
 } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getCart } from "../../api/Api";
 import LoginEc from "../login/LoginEc";
 import SignupEc from "../login/SignupEc";
 import LogoutEc from "../login/LogoutEc";
@@ -91,8 +82,6 @@ const items = [
   },
 ];
 function Header() {
-  const counter = useSelector((state) => state.counter);
-
   const navigate = useNavigate();
 
   const onMenuClick = (item) => {
@@ -141,6 +130,10 @@ function AppCart() {
     {
       title: "Title",
       dataIndex: "title",
+      render: (value, record, index) => {
+        record.id === 21 ? (value = "Daal Masoor 500 grams") : (value = value);
+        return <span>{value}</span>;
+      },
     },
     {
       title: "Price",
@@ -152,12 +145,14 @@ function AppCart() {
     {
       title: "Quantity",
       dataIndex: "quantity",
-      render: (value, record) => {
+      render: (value, record, index) => {
         return (
           <InputNumber
             min={0}
             defaultValue={1}
             onChange={(value) => {
+              console.log(value);
+              console.log(index);
               setCartItems((pre) =>
                 pre.map((cart) => {
                   if (record.id === cart.id) {
@@ -215,6 +210,7 @@ function AppCart() {
   };
 
   const handleDelete = (index) => {
+    console.log(index);
     cartItems.splice(index, 1);
     localStorage.setItem("itemslocal", JSON.stringify(cartItems));
     setCartItems(JSON.parse(localStorage.getItem("itemslocal")));

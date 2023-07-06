@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { addcart, increment } from "../../actions/counter";
+import { addcart } from "../../actions/counter";
 import {
   Card,
   List,
   Image,
   Typography,
-  ellipsis,
   Badge,
   Rate,
   Button,
@@ -22,8 +21,6 @@ import {
 } from "../../api/Api";
 import Paragraph from "antd/es/typography/Paragraph";
 function Products() {
-  const updateLocalStorage = useSelector((state) => state.updateLocalStorage);
-
   const [loading, setLoading] = useState(false);
   const [items, setItems] = useState([]);
   const param = useParams();
