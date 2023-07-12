@@ -145,24 +145,24 @@ function AppCart() {
     {
       title: "Quantity",
       dataIndex: "quantity",
+      align: "center",
       render: (value, record, index) => {
         return (
           <InputNumber
             min={0}
-            addonAfter={record.count}
-            // onChange={(value) => {
-            //   setNumber(record.count + value);
-            //   console.log(number);
-            //   return number;
-            // setCartItems((pre) => {
-            //   pre.map((cart) => {
-            //     if (record.id === cart.id) {
-            //       cart.stock = cart.price * value;
-            //     }
-            //     return cart;
-            //   });
-            // });
-            // }}
+            defaultValue={1}
+            onChange={(value) => {
+              console.log(value);
+              console.log(index);
+              setCartItems((pre) =>
+                pre.map((cart) => {
+                  if (record.id === cart.id) {
+                    cart.stock = cart.price * value;
+                  }
+                  return cart;
+                })
+              );
+            }}
           ></InputNumber>
         );
       },
