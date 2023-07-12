@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addcart } from "../../actions/counter";
 import {
   Card,
@@ -106,7 +106,11 @@ function Products() {
             >
               <Card
                 className="itemCard"
-                title={product.title}
+                title={
+                  product.id === 21
+                    ? (product.title = "Daal Masoor 500 grams")
+                    : product.title
+                }
                 key={index}
                 cover={
                   <Image className="itemCardImage" src={product.thumbnail} />
@@ -158,11 +162,23 @@ function AddToCart({ item }) {
       message.success(`${item.title} has been added to cart!`);
       setLoading(false);
     });
+    //localStorage.removeItem("itemslocal");
     const itemOld = localStorage.getItem("itemslocal")
       ? JSON.parse(localStorage.getItem("itemslocal"))
       : [];
-    itemOld.push(item);
-    localStorage.setItem("itemslocal", JSON.stringify(itemOld));
+    const index = itemOld.findIndex((pre) => item.id === pre.id);
+    if (index === -1) {
+      itemOld.push({ ...item, count: 1, total: item.price });
+      localStorage.setItem("itemslocal", JSON.stringify(itemOld));
+    } else {
+      const pr = itemOld[index];
+      itemOld[index] = {
+        ...pr,
+        count: pr.count + 1,
+        total: pr.price * (pr.count + 1),
+      };
+      localStorage.setItem("itemslocal", JSON.stringify(itemOld));
+    }
   };
   return (
     <Button type="link" onClick={addBudgeToCart} loading={loading}>

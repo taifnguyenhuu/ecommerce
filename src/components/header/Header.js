@@ -87,7 +87,6 @@ function Header() {
   const onMenuClick = (item) => {
     navigate(`/${item.key}`);
   };
-
   const [login, setLogin] = useState();
   const callbackFunction = (childData) => {
     setLogin(childData);
@@ -117,6 +116,7 @@ function AppCart() {
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [checkoutDrawerOpen, setCheckoutDrawerOpen] = useState(false);
+  const [number, setNumber] = useState(0);
 
   useEffect(() => {
     setCartItems(
@@ -149,26 +149,27 @@ function AppCart() {
         return (
           <InputNumber
             min={0}
-            defaultValue={1}
-            onChange={(value) => {
-              console.log(value);
-              console.log(index);
-              setCartItems((pre) =>
-                pre.map((cart) => {
-                  if (record.id === cart.id) {
-                    cart.stock = cart.price * value;
-                  }
-                  return cart;
-                })
-              );
-            }}
+            addonAfter={record.count}
+            // onChange={(value) => {
+            //   setNumber(record.count + value);
+            //   console.log(number);
+            //   return number;
+            // setCartItems((pre) => {
+            //   pre.map((cart) => {
+            //     if (record.id === cart.id) {
+            //       cart.stock = cart.price * value;
+            //     }
+            //     return cart;
+            //   });
+            // });
+            // }}
           ></InputNumber>
         );
       },
     },
     {
       title: "Total",
-      dataIndex: "stock",
+      dataIndex: "total",
       render: (value) => {
         return <span>${value}</span>;
       },
@@ -197,8 +198,7 @@ function AppCart() {
     },
   ];
   const summaryTotal = (data) => {
-    const total = data.reduce((pre, cur) => pre + cur.stock, 0);
-
+    const total = data.reduce((pre, cur) => pre + cur.total, 0);
     return <span>${total}</span>;
   };
 
@@ -221,7 +221,7 @@ function AppCart() {
         onClick={() => {
           setCartDrawerOpen(true);
         }}
-        count={cartItems.length}
+        count={cartItems.reduce((pre, cur) => pre + cur.count, 0)}
         className="soppingCartIcon"
       >
         <ShoppingCartOutlined />
